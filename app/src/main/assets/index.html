@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ford Escape 2009 Launcher 9"</title>
+<style>
+  :root{--blue:#1a529c;--glow:#38bdf8;--panel:rgba(13,23,42,.75);--bdr:rgba(56,189,248,.3);--red:#ff3b3b;--rglow:rgba(255,59,59,.55)}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;user-select:none}
+  body{background:radial-gradient(circle at 50% 52%,#0b1e3d 0%,#03060c 68%,#000 100%);color:#fff;width:100vw;height:100vh;overflow:hidden}
+  .top-bar{position:absolute;top:0;left:0;right:0;height:48px;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:0 24px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent);opacity:0;animation:fade .8s ease 4.2s forwards}
+  .brand{font-size:.95rem;letter-spacing:3px;font-weight:600;color:#93c5fd}.brand span{color:#fff;font-weight:700}
+  .clock{font-size:1.25rem;font-weight:700}
+  .stage{display:grid;grid-template-columns:27% 46% 27%;width:100vw;height:100vh;padding:52px 18px 76px;align-items:center}
+  .panel{height:92%;background:var(--panel);border:1px solid var(--bdr);border-radius:22px;padding:18px;backdrop-filter:blur(10px);display:flex;flex-direction:column;justify-content:space-between;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.6);opacity:0;z-index:10}
+  .left{transform:translateX(-40px);animation:slideL .9s cubic-bezier(.2,.8,.2,1) 4s forwards}
+  .right{transform:translateX(40px);animation:slideR .9s cubic-bezier(.2,.8,.2,1) 4s forwards}
+  .ring{width:170px;height:170px;border-radius:50%;border:6px solid rgba(56,189,248,.18);border-top-color:var(--glow);border-right-color:var(--glow);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 25px rgba(56,189,248,.2),0 0 20px rgba(26,82,156,.4);margin:auto 0}
+  .spd{font-size:3.5rem;font-weight:800;line-height:1}.unit{font-size:.9rem;letter-spacing:2px;color:var(--glow);margin-top:4px;font-weight:600}
+  .gps{font-size:.78rem;color:#94a3b8}
+  .center{position:relative;width:100%;height:100%}
+  .c-img{position:absolute;top:50%;left:50%;width:128%;max-width:620px;object-fit:contain;mix-blend-mode:lighten;filter:contrast(1.28) brightness(0.92);-webkit-mask-image:radial-gradient(ellipse 62% 56% at 50% 50%,#000 45%,rgba(0,0,0,.4) 66%,transparent 82%);mask-image:radial-gradient(ellipse 62% 56% at 50% 50%,#000 45%,rgba(0,0,0,.4) 66%,transparent 82%);opacity:0}
+  .logo{z-index:2;-webkit-mask-image:radial-gradient(ellipse 58% 50% at 50% 50%,#000 42%,rgba(0,0,0,.35) 62%,transparent 78%);mask-image:radial-gradient(ellipse 58% 50% at 50% 50%,#000 42%,rgba(0,0,0,.35) 62%,transparent 78%);animation:logoIn 2.6s cubic-bezier(.16,1,.3,1) forwards;pointer-events:none}
+  .car{z-index:1;animation:carIn 1.8s cubic-bezier(.16,1,.3,1) 2.4s forwards}
+  .floor{position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:80%;height:20px;background:radial-gradient(ellipse,rgba(56,189,248,.4),transparent 75%);opacity:0;animation:fade 1s ease 1s forwards}
+  .hdr{font-size:.85rem;letter-spacing:1.5px;color:#93c5fd;font-weight:600;text-transform:uppercase}
+  .art{width:92px;height:92px;border-radius:16px;background:linear-gradient(135deg,#1e3a8a,#0284c7);display:flex;align-items:center;justify-content:center;font-size:2.5rem;box-shadow:0 8px 20px rgba(2,132,199,.35)}
+  .t-info{text-align:center;width:100%}.t-tit{font-size:1.05rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.t-sub{font-size:.85rem;color:#94a3b8;margin-top:2px}
+  .ctrls{display:flex;gap:16px;align-items:center}
+  .cbtn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .cbtn.play{width:52px;height:52px;background:var(--blue);border-color:var(--glow);font-size:1.3rem}
+  .cbtn:active{transform:scale(.9)}
+  .dock{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:25;display:flex;gap:14px;padding:8px 20px;border-radius:20px;background:rgba(10,18,34,.85);border:1px solid var(--bdr);backdrop-filter:blur(12px);opacity:0;animation:fade .8s ease 4.3s forwards}
+  .dbtn{padding:8px 16px;border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-size:.9rem;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;gap:8px}
+  .dbtn:active{background:var(--blue)}
+  #drawer{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 50% 45%,#0e2447 0%,#050c1a 70%,#02050c 100%);display:flex;flex-direction:column;justify-content:space-between;padding:58px 40px 18px;opacity:0;visibility:hidden;transform:scale(.96);transition:all .28s ease}
+  #drawer.open{opacity:1;visibility:visible;transform:scale(1)}
+  .grid10{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:20px;width:100%;height:100%;max-width:1100px;margin:0 auto;align-items:center;justify-items:center}
+  .rcard{width:100%;height:100%;max-width:170px;max-height:160px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(10,18,34,.78));border:2.5px solid var(--red);border-radius:26px;box-shadow:0 0 18px var(--rglow),inset 0 0 14px rgba(255,59,59,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:transform .15s}
+  .rcard:active{transform:scale(.92);box-shadow:0 0 28px rgba(255,59,59,.9)}
+  .ricon{font-size:2.6rem}.rlbl{font-size:.95rem;font-weight:600;color:#f1f5f9}
+  .back-wrap{display:flex;justify-content:center;padding-top:12px}
+  .back-btn{padding:11px 38px;border-radius:16px;background:rgba(15,28,52,.85);border:1.5px solid rgba(147,197,253,.35);color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+  .back-btn:active{background:var(--blue)}
+  @keyframes logoIn{0%{transform:translate(-50%,-44%) scale(1.38);opacity:0}38%{transform:translate(-50%,-50%) scale(1.04);opacity:1}72%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(.92);opacity:0;visibility:hidden}}
+  @keyframes carIn{0%{transform:translate(-50%,-44%) scale(1.38);opacity:0}60%{transform:translate(-50%,-50%) scale(1.04);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+  @keyframes slideL{to{opacity:1;transform:translateX(0)}}
+  @keyframes slideR{to{opacity:1;transform:translateX(0)}}
+  @keyframes fade{to{opacity:1}}
+</style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="brand" id="htitle">FORD <span>ESCAPE 2009</span> • BLUE PEARL</div>
+    <div class="clock" id="clk">--:--</div>
+  </div>
+  <div class="stage">
+    <div class="panel left">
+      <div class="hdr">Velocímetro GPS</div>
+      <div class="ring"><div class="spd" id="spd">0</div><div class="unit">KM/H</div></div>
+      <div class="gps" id="gps">🛰️ Buscando señal GPS...</div>
+    </div>
+    <div class="center">
+      <img src="logo.png" onerror="this.onerror=null;this.src='logo.jpg'" class="c-img logo">
+      <img src="escape.png" onerror="this.onerror=null;this.src='escape.jpg'" class="c-img car">
+      <div class="floor"></div>
+    </div>
+    <div class="panel right">
+      <div class="hdr">Multimedia</div>
+      <div class="art">🎵</div>
+      <div class="t-info"><div class="t-tit">Audio Bluetooth / Spotify</div><div class="t-sub">Listo para reproducir</div></div>
+      <div class="ctrls">
+        <button class="cbtn" onclick="mCmd('prev')">⏮</button>
+        <button class="cbtn play" id="pbtn" onclick="tPlay()">▶</button>
+        <button class="cbtn" onclick="mCmd('next')">⏭</button>
+      </div>
+    </div>
+  </div>
+  <div class="dock">
+    <button class="dbtn" onclick="goApp('maps')">🗺️ Maps</button>
+    <button class="dbtn" onclick="goApp('spotify')">🎧 Spotify</button>
+    <button class="dbtn" onclick="goApp('radio')">📻 Radio</button>
+    <button class="dbtn" onclick="showApps(true)">📱 Todas las Apps</button>
+    <button class="dbtn" onclick="goApp('settings')">⚙️ Ajustes</button>
+  </div>
+  <div id="drawer">
+    <div class="grid10">
+      <div class="rcard" onclick="goApp('maps')"><div class="ricon">🗺️</div><div class="rlbl">Maps</div></div>
+      <div class="rcard" onclick="goApp('spotify')"><div class="ricon">🎧</div><div class="rlbl">Spotify</div></div>
+      <div class="rcard" onclick="goApp('radio')"><div class="ricon">📻</div><div class="rlbl">Radio FM</div></div>
+      <div class="rcard" onclick="goApp('bt')"><div class="ricon">📶</div><div class="rlbl">Bluetooth</div></div>
+      <div class="rcard" onclick="goApp('youtube')"><div class="ricon">▶️</div><div class="rlbl">YouTube</div></div>
+      <div class="rcard" onclick="goApp('waze')"><div class="ricon">🚙</div><div class="rlbl">Waze</div></div>
+      <div class="rcard" onclick="goApp('phone')"><div class="ricon">📞</div><div class="rlbl">Teléfono</div></div>
+      <div class="rcard" onclick="goApp('settings')"><div class="ricon">⚙️</div><div class="rlbl">Ajustes</div></div>
+      <div class="rcard" onclick="goApp('music')"><div class="ricon">🎵</div><div class="rlbl">Música</div></div>
+      <div class="rcard" onclick="goApp('camera')"><div class="ricon">📷</div><div class="rlbl">Cámara Reversa</div></div>
+    </div>
+    <div class="back-wrap"><button class="back-btn" onclick="showApps(false)">Volver al Inicio</button></div>
+  </div>
+<script>
+  function syncClock(){
+    if(window.AndroidBridge && window.AndroidBridge.getSystemTime){
+      document.getElementById('clk').textContent=window.AndroidBridge.getSystemTime();
+    }else{
+      const d=new Date();let h=d.getHours(),m=String(d.getMinutes()).padStart(2,'0');
+      const ap=h>=12?'PM':'AM';h=h%12||12;
+      document.getElementById('clk').textContent=`${String(h).padStart(2,'0')}:${m} ${ap}`;
+    }
+  }
+  syncClock();setInterval(syncClock,1000);
